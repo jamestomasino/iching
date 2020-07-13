@@ -1,5 +1,5 @@
 #!/bin/sh
-
+version="v2020.07.13"
 auto=0
 stalks=0
 hexagram=""
@@ -192,11 +192,14 @@ END
   fi
   echo "$hexagram"
   printf "Hexagram: https://divination.com/iching/lookup/%s-2/\n" "$(gethex $((hex1 + 1)))"
-  printf "Changing: https://divination.com/iching/lookup/%s-2\n" "$(gethex $((hex2 + 1)))"
+  printf "Changing: https://divination.com/iching/lookup/%s-2/\n" "$(gethex $((hex2 + 1)))"
 }
 
 if [ "--help" = "$1" ] || [ "help" = "$1" ]; then
   help
+elif [ "--version" = "$1" ] || [ "-v" = "$1" ]; then
+  printf "%s version %s - https://github.com/jamestomasino/iching\n" "$(basename "$0")" "$version"
+  exit 0
 else
   if [ "--auto" = "$1" ]; then
     auto=1
