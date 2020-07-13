@@ -17,7 +17,7 @@ random () {
 }
 
 pause () {
-  printf "%s" "${1:-...}"
+  printf "%s" "${1:-}"
   (tty_state=$(stty -g)
   stty -icanon
   LC_ALL=C dd bs=1 count=1 >/dev/null 2>&1
@@ -28,7 +28,7 @@ pause () {
 phase1 () {
   acc1=0
   stalks=$((stalks - 1))
-  pause
+  pause "..."
   l=$(random $stalks)
   r=$((stalks - l))
   ml1=$((l % 4))
@@ -53,7 +53,7 @@ phase1 () {
 phase2 () {
   acc2=1
   stalks=$((stalks - 1))
-  pause
+  pause "..."
   l=$(random $stalks)
   r=$((stalks - l))
   ml2=$((l % 4))
@@ -78,7 +78,7 @@ phase2 () {
 phase3 () {
   acc3=1
   stalks=$((stalks - 1))
-  pause
+  pause "..."
   l=$(random $stalks)
   r=$((stalks - l))
   ml3=$((l % 4))
