@@ -10,11 +10,12 @@ random () {
 }
 
 pause () {
-  printf "\n[press a key]"
-  old_stty_cfg=$(stty -g)
-  stty raw -echo
-  while ! head -c 1; do true; done
-  stty "$old_stty_cfg"
+  printf "..."
+  (tty_state=$(stty -g)
+  stty -icanon
+  LC_ALL=C dd bs=1 count=1 >/dev/null 2>&1
+  stty "$tty_state"
+  ) </dev/tty
 }
 
 phase1 () {
@@ -117,20 +118,33 @@ getdigram () {
   printf "moo"
 }
 
-printf "Your mind on the question to be posed to the oracle.\n"
+printf ""
+cat << END
+ ___    ____ _   _ ___ _   _  ____ 
+|_ _|  / ___| | | |_ _| \ | |/ ___|
+ | |  | |   | |_| || ||  \| | |  _ 
+ | |  | |___|  _  || || |\  | |_| |
+|___|  \____|_| |_|___|_| \_|\____|
+
+Focus your mind on the question to be posed to the oracle.
+Each line of the hexagram and changed hexagram will be generated in sequence.
+You will be prompted for your input 18 times throughout the reading. When the
+program pauses press any key to continue.
+
+END
 i=6
 while [ $i -gt 0 ];
 do 
   stalks=50
   points=0
   stalks=$((stalks - 1))
-  printf "\nGenerating hexagrams line %s" "$(( 7 - i))"
+  printf "\nBuilding line %s" "$(( 7 - i))"
   phase1
   phase2
   phase3
   phase4
-  printf "\n\n"
   i=$((i-1))
 done
 
+printf "\n\n"
 echo "$hexagram"
