@@ -101,6 +101,7 @@ phase3 () {
 }
 
 phase4 () {
+  # build output picture and bitarray of hexagrams
   pow=$(echo "2 ^ $((6 - i))" | bc)
   case $points in
     6)
