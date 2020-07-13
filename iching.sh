@@ -2,6 +2,13 @@
 
 stalks=0
 hexagram=""
+hex1=0
+hex2=0
+bin2gram="2,24,7,19,15,36,46,11,16,51,40,54,62,55,32,34,8,3,29,60,39,63,48,5,45,17,47,58,31,49,28,43,23,27,4,41,52,22,18,26,35,21,64,38,56,30,50,14,20,42,59,61,53,37,57,9,12,25,6,10,33,13,44,1"
+
+gethex () {
+  printf "%s" "$bin2gram" | awk -F "," -v col="$1" '{print $col}'
+}
 
 random () {
   limit=${1-255}
@@ -10,7 +17,7 @@ random () {
 }
 
 pause () {
-  printf "..."
+  printf "%s" "${1:-...}"
   (tty_state=$(stty -g)
   stty -icanon
   LC_ALL=C dd bs=1 count=1 >/dev/null 2>&1
@@ -94,21 +101,30 @@ phase3 () {
 }
 
 phase4 () {
+  pow=$(echo "2 ^ $((6 - i))" | bc)
   case $points in
     6)
       hexagram='━━━━━━━━━   ━━━   ━━━\n'"$hexagram"
+      hex1=$((hex1 + (1 * pow)))
+      hex2=$((hex2 + (0 * pow)))
       return
       ;;
     7)
       hexagram='━━━   ━━━   ━━━   ━━━\n'"$hexagram"
+      hex1=$((hex1 + (0 * pow)))
+      hex2=$((hex2 + (0 * pow)))
       return
       ;;
     8)
       hexagram='━━━━━━━━━   ━━━━━━━━━\n'"$hexagram"
+      hex1=$((hex1 + (1 * pow)))
+      hex2=$((hex2 + (1 * pow)))
       return
       ;;
     9)
       hexagram='━━━   ━━━   ━━━━━━━━━\n'"$hexagram"
+      hex1=$((hex1 + (0 * pow)))
+      hex2=$((hex2 + (1 * pow)))
       return
       ;;
   esac
@@ -118,6 +134,7 @@ getdigram () {
   printf "moo"
 }
 
+# Main block
 printf ""
 cat << END
  ___    ____ _   _ ___ _   _  ____ 
@@ -128,10 +145,15 @@ cat << END
 
 Focus your mind on the question to be posed to the oracle.
 Each line of the hexagram and changed hexagram will be generated in sequence.
-You will be prompted for your input 18 times throughout the reading. When the
-program pauses press any key to continue.
+
+ - You should not ask same question many times
+ - Do not ask petty questions
+ - Do not ask if it could cause harm to others
 
 END
+
+pause "You will be prompted to continue 18 times. Press any key to begin..."
+
 i=6
 while [ $i -gt 0 ];
 do 
@@ -148,3 +170,5 @@ done
 
 printf "\n\n"
 echo "$hexagram"
+printf "Hexagram: https://divination.com/iching/lookup/%s-2/\n" "$(gethex $((hex1 + 1)))"
+printf "Changing: https://divination.com/iching/lookup/%s-2\n" "$(gethex $((hex2 + 1)))"
