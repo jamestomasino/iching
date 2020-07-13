@@ -115,25 +115,25 @@ phase4 () {
   pow=$(echo "2 ^ $((6 - i))" | bc)
   case $points in
     6)
-      hexagram='━━━━━━━━━   ━━━   ━━━\n'"$hexagram"
+      hexagram=$(printf "━━━━━━━━━   ━━━   ━━━\n%s" "$hexagram")
       hex1=$((hex1 + (1 * pow)))
       hex2=$((hex2 + (0 * pow)))
       return
       ;;
     7)
-      hexagram='━━━   ━━━   ━━━   ━━━\n'"$hexagram"
+      hexagram=$(printf "━━━   ━━━   ━━━   ━━━\n%s" "$hexagram")
       hex1=$((hex1 + (0 * pow)))
       hex2=$((hex2 + (0 * pow)))
       return
       ;;
     8)
-      hexagram='━━━━━━━━━   ━━━━━━━━━\n'"$hexagram"
+      hexagram=$(printf "━━━━━━━━━   ━━━━━━━━━\n%s" "$hexagram")
       hex1=$((hex1 + (1 * pow)))
       hex2=$((hex2 + (1 * pow)))
       return
       ;;
     9)
-      hexagram='━━━   ━━━   ━━━━━━━━━\n'"$hexagram"
+      hexagram=$(printf "━━━   ━━━   ━━━━━━━━━\n%s" "$hexagram")
       hex1=$((hex1 + (0 * pow)))
       hex2=$((hex2 + (1 * pow)))
       return
@@ -190,7 +190,7 @@ END
   if [ "$auto" -eq 0 ]; then
     printf "\n\n"
   fi
-  echo "$hexagram"
+  printf "%s\n" "$hexagram"
   printf "Hexagram: https://divination.com/iching/lookup/%s-2/\n" "$(gethex $((hex1 + 1)))"
   printf "Changing: https://divination.com/iching/lookup/%s-2/\n" "$(gethex $((hex2 + 1)))"
 }
