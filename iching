@@ -1,10 +1,11 @@
 #!/bin/sh
-version="v2020.07.13"
+version="v2020.07.16"
 auto=0
 stalks=0
 hexagram=""
 hex1=0
 hex2=0
+RANDOM=$$
 
 gethex () {
   # treat hexagram as bitarray, the following is the diagram order from 0-63
@@ -13,10 +14,14 @@ gethex () {
 }
 
 random () {
-  # use system entropy for random functions, mod to length for range
-  limit=${1-255}
-  r=$(od -An -N1 -i /dev/random | tr -d '[:space:]')
-  printf "%s" "$((r % limit))"
+  if [ "$auto" -eq 0 ]; then
+    # use system entropy for random functions, mod to length for range
+    limit=${1-255}
+    r=$(od -An -N1 -i /dev/random | tr -d '[:space:]')
+    printf "%s" "$((r % limit))"
+  else
+    printf "%s" "$((RANDOM % limit))"
+  fi
 }
 
 pause () {
@@ -28,10 +33,6 @@ pause () {
     LC_ALL=C dd bs=1 count=1 >/dev/null 2>&1
     stty "$tty_state"
     ) </dev/tty
-  else
-    # delay necessary to gain enough system entropy for randomizer when
-    # we are non-interactive
-    perl -e "select(undef,undef,undef,0.1);"
   fi
 }
 
